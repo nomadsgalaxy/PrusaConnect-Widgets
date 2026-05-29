@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
@@ -10,6 +14,7 @@ using PrusaConnect.Core.Models;
 using PrusaConnect.Core.PrusaConnect;
 using PrusaConnect.Core.PrusaLink;
 using PrusaConnect.Core.Storage;
+using PrusaConnect.Core.Update;
 using PrusaConnect.Widget.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI;
@@ -31,6 +36,9 @@ public sealed partial class SettingsWindow : Window
     private List<(string Id, string Name)> _farmOrgs = new();
     private List<(string Id, string Name)> _connectTeams = new();
 
+    // Set when the update check finds a newer release that ships an installer zip.
+    private string? _updateInstallerUrl;
+
     public SettingsWindow()
     {
         InitializeComponent();
@@ -46,6 +54,102 @@ public sealed partial class SettingsWindow : Window
         // RefreshCloudPrintersAsync loads farm teams on success, so signing in
         // mid-session refreshes the per-tile dropdowns without a restart.
         _ = RefreshCloudPrintersAsync();
+        _ = CheckForUpdatesAsync();
+    }
+
+    // -- Auto-update check ----------------------------------------------------
+
+    /// <summary>
+    /// Ask GitHub whether there's a newer release and, if so, show the update
+    /// banner. Best-effort: a failed check is silent. Also fills the footer
+    /// version line.
+    /// </summary>
+    private async Task CheckForUpdatesAsync()
+    {
+        Version current;
+        try
+        {
+            var pv = Windows.ApplicationModel.Package.Current.Id.Version;
+            current = new Version(pv.Major, pv.Minor, pv.Build, pv.Revision);
+            VersionText.Text = $"Version {pv.Major}.{pv.Minor}.{pv.Build}";
+        }
+        catch { return; }   // no package identity (unpackaged run)
+
+        try
+        {
+            using var checker = new UpdateChecker();
+            var latest = await checker.GetLatestAsync();
+            if (latest is null || !UpdateChecker.IsNewer(latest.Version, current)) return;
+
+            _updateInstallerUrl = latest.InstallerUrl;
+            UpdateBar.Title = $"Update available: {latest.TagName}";
+            UpdateBar.Message = string.IsNullOrEmpty(latest.InstallerUrl)
+                ? "Open the release page to grab the new installer."
+                : "Download and install it now - you'll get a prompt to allow the install.";
+            UpdateBar.IsOpen = true;
+        }
+        catch { /* best-effort; never break settings on a failed check */ }
+    }
+
+    /// <summary>
+    /// Download the release's installer zip, unpack it, and launch install.ps1
+    /// (elevated, since it trusts the cert). Falls back to opening the release
+    /// page if there's no asset or anything goes wrong.
+    /// </summary>
+    private async void OnGetUpdateClick(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrEmpty(_updateInstallerUrl))
+        {
+            await OpenReleasePageAsync();
+            return;
+        }
+        try
+        {
+            GetUpdateButton.IsEnabled = false;
+            UpdateBar.Message = "Downloading the new installer...";
+
+            string work = Path.Combine(Path.GetTempPath(), "PrusaConnectWidget-update");
+            if (Directory.Exists(work)) Directory.Delete(work, recursive: true);
+            Directory.CreateDirectory(work);
+            string zip = Path.Combine(work, "installer.zip");
+
+            using (var http = new HttpClient())
+            using (var src = await http.GetStreamAsync(_updateInstallerUrl))
+            using (var fs = File.Create(zip))
+            {
+                await src.CopyToAsync(fs);
+            }
+
+            string extract = Path.Combine(work, "files");
+            ZipFile.ExtractToDirectory(zip, extract);
+            string? ps1 = Directory.GetFiles(extract, "install.ps1", SearchOption.AllDirectories).FirstOrDefault();
+            if (ps1 is null) { await OpenReleasePageAsync(); return; }
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-ExecutionPolicy Bypass -NoProfile -File \"{ps1}\"",
+                UseShellExecute = true,
+                Verb = "runas",   // elevation: install.ps1 trusts the cert
+            });
+            UpdateBar.Message = "Installer launched. Approve the prompt, then reopen the app on the new version.";
+        }
+        catch (Exception ex)
+        {
+            Log.Write($"Update install failed: {ex.GetType().Name} {ex.Message}");
+            _updateInstallerUrl = null;   // next click opens the page instead
+            UpdateBar.Message = "Couldn't run the installer. Click again to open the release page.";
+        }
+        finally
+        {
+            GetUpdateButton.IsEnabled = true;
+        }
+    }
+
+    private static async Task OpenReleasePageAsync()
+    {
+        try { await Windows.System.Launcher.LaunchUriAsync(new Uri(UpdateChecker.ReleasesPage)); }
+        catch { /* nothing more we can do */ }
     }
 
     /// <summary>

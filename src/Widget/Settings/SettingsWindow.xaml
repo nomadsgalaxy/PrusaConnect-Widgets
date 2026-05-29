@@ -23,6 +23,18 @@
                 <TextBlock Text="PRUSA" FontSize="44" FontWeight="Black" />
                 <TextBlock Text="Connect Widget - Printer Configuration"
                            Opacity="0.6" FontSize="14" />
+                <!-- Hidden until the update check finds a newer release. -->
+                <InfoBar x:Name="UpdateBar"
+                         Margin="0,10,0,0"
+                         IsOpen="False" IsClosable="True"
+                         Severity="Success"
+                         Title="Update available">
+                    <InfoBar.ActionButton>
+                        <Button x:Name="GetUpdateButton"
+                                Content="Get the update"
+                                Click="OnGetUpdateClick" />
+                    </InfoBar.ActionButton>
+                </InfoBar>
             </StackPanel>
 
             <!-- Saved printers (the catalogue) - each row is an inline Expander
@@ -120,6 +132,7 @@
 
             <!-- Footer - also carries the SWAtt v1 creator attribution (UI-visibility requirement). -->
             <StackPanel Grid.Row="4" Spacing="2" Margin="0,8,0,0">
+                <TextBlock x:Name="VersionText" Text="" Opacity="0.6" FontSize="12" />
                 <TextBlock Text="Prusa Connect Widget - created by NomadsGalaxy"
                            Opacity="0.6" FontSize="12" />
                 <TextBlock Text="Licensed under OCL v1.1 + SWAtt v1 · Not affiliated with Prusa Research."
