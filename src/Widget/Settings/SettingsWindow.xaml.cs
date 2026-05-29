@@ -467,7 +467,7 @@ public sealed partial class SettingsWindow : Window
         var apiKeyBox = new PasswordBox
         {
             Header = "API key",
-            PlaceholderText = "PrusaLink key (Klipper/Moonraker: usually blank)",
+            PlaceholderText = "PrusaLink API key",
             Password = isNew ? string.Empty : (_secrets.Get(existing.Id) ?? string.Empty),
         };
         var modelBox = new TextBox { Header = "Model (optional)", Text = isNew ? string.Empty : existing.Model };
@@ -483,6 +483,11 @@ public sealed partial class SettingsWindow : Window
         typeCombo.Items.Add(new ComboBoxItem { Content = "Klipper (Moonraker)" });
         typeCombo.SelectedIndex = (!isNew && existing.Source == PrinterSource.Moonraker) ? 1 : 0;
         bool IsMoonraker() => typeCombo.SelectedIndex == 1;
+
+        // Klipper/Moonraker usually has no API key, so hide that field for it.
+        void SyncTypeUi() => apiKeyBox.Visibility = IsMoonraker() ? Visibility.Collapsed : Visibility.Visible;
+        typeCombo.SelectionChanged += (s, e) => SyncTypeUi();
+        SyncTypeUi();
 
         var testButton = new Button { Content = "Test connection" };
         var saveButton = new Button { Content = isNew ? "Add" : "Save", Style = (Style)Application.Current.Resources["AccentButtonStyle"] };
