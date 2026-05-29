@@ -83,7 +83,7 @@ internal static class WidgetDataBuilder
             ? "No camera URL set - add one in the settings app."
             : hasHttpImage
                 ? string.Empty
-                : "RTSP playback arrives in Phase 3 (Prusa Buddy Cam).";
+                : "Only http(s) snapshot URLs can be shown on a tile.";
 
         var data = new Dictionary<string, object?>
         {

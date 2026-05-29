@@ -25,7 +25,7 @@
         },
         {
           "type": "TextBlock",
-          "text": "Phase 0 - provider online",
+          "text": "Provider online",
           "color": "Accent",
           "size": "Medium",
           "horizontalAlignment": "Center",
@@ -34,7 +34,7 @@
         },
         {
           "type": "TextBlock",
-          "text": "Configure printers in the settings app (coming next).",
+          "text": "Configure printers in the settings app.",
           "size": "Small",
           "isSubtle": true,
           "horizontalAlignment": "Center",

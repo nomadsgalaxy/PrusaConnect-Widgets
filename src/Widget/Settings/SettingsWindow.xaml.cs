@@ -472,7 +472,7 @@ public sealed partial class SettingsWindow : Window
         var modelBox = new TextBox { Header = "Model (optional)", Text = isNew ? string.Empty : existing.Model };
         var cameraBox = new TextBox
         {
-            Header = "Camera stream URL (optional, for Phase 3)",
+            Header = "Camera stream URL (optional)",
             PlaceholderText = "rtsp://printer-ip/stream or http://...",
             Text = isNew ? string.Empty : (existing.CameraStreamUrl ?? string.Empty),
         };
@@ -696,7 +696,7 @@ public sealed partial class SettingsWindow : Window
         button.Content = original;
     }
 
-    // -- Prusa Connect cloud section (Phase 4) --------------------------------
+    // -- Prusa Connect cloud section ------------------------------------------
 
     private async void OnRefreshCloudClick(object sender, RoutedEventArgs e)
     {
