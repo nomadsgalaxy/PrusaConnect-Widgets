@@ -1,0 +1,55 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Image",
+      "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAdSURBVDhPY/gbwPCfEsyALkAqHjVg1IBRAwaLAQDPBkwfUPl+BAAAAABJRU5ErkJggg==",
+      "width": "stretch",
+      "height": "6px",
+      "spacing": "None",
+      "altText": ""
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "PRUSA",
+          "weight": "Bolder",
+          "size": "ExtraLarge",
+          "horizontalAlignment": "Center",
+          "spacing": "None"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Connect Widget",
+          "size": "Small",
+          "isSubtle": true,
+          "horizontalAlignment": "Center",
+          "spacing": "None"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Tile not set",
+          "color": "Warning",
+          "weight": "Bolder",
+          "size": "Medium",
+          "horizontalAlignment": "Center",
+          "spacing": "Medium",
+          "wrap": true
+        },
+        {
+          "type": "TextBlock",
+          "text": "Open the Prusa Connect Widget app and choose which printer or farm view this tile shows.",
+          "size": "Small",
+          "isSubtle": true,
+          "wrap": true,
+          "horizontalAlignment": "Center",
+          "spacing": "Small"
+        }
+      ]
+    }
+  ]
+}

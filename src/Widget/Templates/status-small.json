@@ -1,0 +1,74 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Image",
+      "url": "${accentBar}",
+      "width": "stretch",
+      "height": "4px",
+      "spacing": "None",
+      "altText": ""
+    },
+    {
+      "type": "TextBlock",
+      "text": "${printerName}",
+      "weight": "Bolder",
+      "size": "Small",
+      "wrap": false,
+      "maxLines": 1,
+      "spacing": "None"
+    },
+    {
+      "type": "ColumnSet",
+      "spacing": "Small",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "auto",
+          "verticalContentAlignment": "Center",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "${stateLabel}",
+              "color": "${stateColor}",
+              "weight": "Bolder",
+              "size": "Small",
+              "wrap": false,
+              "spacing": "None"
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "stretch",
+          "verticalContentAlignment": "Center",
+          "items": [
+            {
+              "$when": "${progressLabel != ''}",
+              "type": "TextBlock",
+              "text": "${progressLabel}",
+              "weight": "Bolder",
+              "size": "Large",
+              "color": "Warning",
+              "horizontalAlignment": "Right",
+              "wrap": false,
+              "spacing": "None"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "$when": "${timeLabel != ''}",
+      "type": "TextBlock",
+      "text": "${timeLabel}",
+      "size": "Small",
+      "isSubtle": true,
+      "wrap": false,
+      "maxLines": 1,
+      "spacing": "None"
+    }
+  ]
+}

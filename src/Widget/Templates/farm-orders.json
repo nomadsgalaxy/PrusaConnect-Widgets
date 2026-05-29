@@ -1,0 +1,103 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Image",
+      "url": "${accentBar}",
+      "width": "stretch",
+      "height": "6px",
+      "spacing": "None",
+      "altText": ""
+    },
+    {
+      "type": "ColumnSet",
+      "spacing": "Small",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            { "type": "TextBlock", "text": "Farm Orders", "weight": "Bolder", "size": "Medium", "color": "Good", "spacing": "None" },
+            { "type": "TextBlock", "text": "${orgName}", "size": "Small", "isSubtle": true, "spacing": "None", "wrap": false, "maxLines": 1 }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "auto",
+          "verticalContentAlignment": "Center",
+          "items": [
+            { "type": "TextBlock", "text": "${countLabel}", "size": "Small", "isSubtle": true, "horizontalAlignment": "Right" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "height": "stretch",
+      "items": [
+        {
+          "type": "Container",
+          "spacing": "Medium",
+          "$data": "${orders}",
+          "separator": true,
+          "items": [
+            {
+              "type": "ColumnSet",
+              "spacing": "Small",
+              "columns": [
+                {
+                  "type": "Column",
+                  "width": "stretch",
+                  "items": [
+                    { "type": "TextBlock", "text": "${name}", "weight": "Bolder", "size": "Default", "wrap": false, "maxLines": 1, "spacing": "None" }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "width": "auto",
+                  "verticalContentAlignment": "Center",
+                  "items": [
+                    { "type": "TextBlock", "text": "${progress}", "size": "Small", "isSubtle": true, "horizontalAlignment": "Right", "spacing": "None" }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ColumnSet",
+              "spacing": "None",
+              "columns": [
+                {
+                  "type": "Column",
+                  "width": "stretch",
+                  "items": [
+                    { "type": "TextBlock", "text": "${status}", "color": "${statusColor}", "size": "Small", "weight": "Bolder", "wrap": false, "maxLines": 1, "spacing": "None" }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "width": "auto",
+                  "verticalContentAlignment": "Center",
+                  "items": [
+                    { "type": "TextBlock", "$when": "${hasEta}", "text": "${eta}", "size": "Small", "isSubtle": true, "horizontalAlignment": "Right", "spacing": "None" }
+                  ]
+                }
+              ]
+            },
+            { "type": "TextBlock", "$when": "${hasPrints}", "text": "${prints}", "size": "Small", "isSubtle": true, "wrap": true, "maxLines": 2, "spacing": "None" }
+          ]
+        },
+        {
+          "$when": "${!hasOrders}",
+          "type": "TextBlock",
+          "text": "No orders in the queue.",
+          "isSubtle": true,
+          "size": "Small",
+          "spacing": "Medium",
+          "horizontalAlignment": "Center"
+        }
+      ]
+    }
+  ]
+}

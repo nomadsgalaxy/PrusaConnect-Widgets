@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application
+    x:Class="PrusaConnect.Widget.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Declaring the Application in XAML is what triggers the WinUI XAML
+        compiler to emit the XamlTypeInfo registration for every control we
+        reference. Without it, controls like PasswordBox/NumberBox/InfoBar
+        fail their type lookup at runtime and the window crashes with
+        STATUS_STOWED_EXCEPTION (0xC000027B) the moment InitializeComponent
+        runs. The merged XamlControlsResources brings in the default styles
+        (AccentButtonStyle and the modern control templates).
+    -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

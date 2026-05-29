@@ -1,0 +1,25 @@
+<Project>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>NU1900;NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+    <Deterministic>true</Deterministic>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Authors>NomadsGalaxy</Authors>
+    <Product>Prusa Connect Widget</Product>
+    <Copyright>Copyright (c) 2026 NomadsGalaxy. Licensed under OCL v1.1 + SWAtt v1. Not affiliated with Prusa Research.</Copyright>
+    <RootNamespace>PrusaConnect</RootNamespace>
+  </PropertyGroup>
+
+  <!-- SWAtt v1: retain the creator identification + license in the compiled
+       assemblies (source-visibility requirement). See /LICENSE. -->
+  <ItemGroup>
+    <AssemblyMetadata Include="License" Value="OCL v1.1 + SWAtt v1" />
+    <AssemblyMetadata Include="Creator" Value="NomadsGalaxy" />
+  </ItemGroup>
+
+</Project>

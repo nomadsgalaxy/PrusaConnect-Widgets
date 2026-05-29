@@ -1,0 +1,170 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Image",
+      "url": "${accentBar}",
+      "width": "stretch",
+      "height": "6px",
+      "spacing": "None",
+      "altText": ""
+    },
+    {
+      "type": "ColumnSet",
+      "spacing": "Small",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "${printerName}",
+              "weight": "Bolder",
+              "size": "Medium",
+              "wrap": false,
+              "maxLines": 1
+            },
+            {
+              "type": "TextBlock",
+              "text": "${modelLabel}",
+              "color": "Warning",
+              "weight": "Bolder",
+              "size": "Small",
+              "spacing": "None",
+              "wrap": false,
+              "maxLines": 1
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "auto",
+          "verticalContentAlignment": "Center",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "${stateLabel}",
+              "color": "${stateColor}",
+              "weight": "Bolder",
+              "size": "Small",
+              "horizontalAlignment": "Right"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "$when": "${hasCamera}",
+      "type": "Image",
+      "url": "${cameraUrl}",
+      "width": "stretch",
+      "size": "Stretch",
+      "spacing": "Medium",
+      "altText": "Camera"
+    },
+    {
+      "$when": "${hasCameraAge}",
+      "type": "TextBlock",
+      "text": "${cameraAge}",
+      "size": "Small",
+      "isSubtle": true,
+      "spacing": "None",
+      "horizontalAlignment": "Right",
+      "wrap": false
+    },
+    {
+      "$when": "${hasJob}",
+      "type": "ColumnSet",
+      "spacing": "Medium",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "${fileLabel}",
+              "wrap": false,
+              "maxLines": 1,
+              "size": "Small",
+              "isSubtle": true,
+              "spacing": "None"
+            },
+            {
+              "type": "TextBlock",
+              "text": "${timeLabel}",
+              "size": "Small",
+              "isSubtle": true,
+              "spacing": "None",
+              "wrap": false,
+              "maxLines": 1
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "auto",
+          "verticalContentAlignment": "Center",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "${progressLabel}",
+              "weight": "Bolder",
+              "size": "ExtraLarge",
+              "color": "Warning",
+              "horizontalAlignment": "Right"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "$when": "${!hasJob}",
+      "type": "TextBlock",
+      "text": "${idleLabel}",
+      "size": "Small",
+      "isSubtle": true,
+      "spacing": "Medium",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "Container",
+      "height": "stretch",
+      "items": []
+    },
+    {
+      "type": "ColumnSet",
+      "spacing": "Medium",
+      "separator": true,
+      "columns": [
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            { "type": "TextBlock", "text": "Nozzle", "size": "Small", "isSubtle": true, "spacing": "None" },
+            { "type": "TextBlock", "text": "${nozzleTemp}", "weight": "Bolder", "size": "Default", "spacing": "None" }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            { "type": "TextBlock", "text": "Bed", "size": "Small", "isSubtle": true, "spacing": "None" },
+            { "type": "TextBlock", "text": "${bedTemp}", "weight": "Bolder", "size": "Default", "spacing": "None" }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "auto",
+          "verticalContentAlignment": "Bottom",
+          "items": [
+            { "type": "TextBlock", "text": "${updatedLabel}", "size": "Small", "isSubtle": true, "horizontalAlignment": "Right" }
+          ]
+        }
+      ]
+    }
+  ]
+}

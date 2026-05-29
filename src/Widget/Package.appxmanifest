@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+    xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+    xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+    xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+    xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+    xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+    xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+    xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+    IgnorableNamespaces="uap uap3 mp com desktop rescap">
+
+  <Identity
+      Name="PrusaConnectWidget"
+      Publisher="CN=PrusaConnectWidget.DevSign"
+      Version="1.0.0.0"
+      ProcessorArchitecture="x64" />
+
+  <mp:PhoneIdentity
+      PhoneProductId="b9de1aa2-389d-4d14-b146-61b1040c0b59"
+      PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+
+  <Properties>
+    <DisplayName>Prusa Connect Widget</DisplayName>
+    <PublisherDisplayName>The Nomad</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-US" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+        Executable="PrusaConnect.Widget.exe"
+        EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+          DisplayName="Prusa Connect Widget"
+          Description="Monitor Prusa printers from the Windows 11 Widgets Board."
+          BackgroundColor="#FD5000"
+          Square150x150Logo="Assets\Square150x150Logo.png"
+          Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#FD5000" />
+      </uap:VisualElements>
+
+      <Extensions>
+
+        <!-- NOTE: We deliberately do NOT register the prusaslicer:// URI
+             scheme. We piggy-back on PrusaSlicer's stored OAuth tokens via
+             Windows Credential Manager (see PrusaSlicerTokenReader), so we
+             have no need to handle the redirect ourselves - and registering
+             it hijacks PrusaSlicer's own OAuth flow. If we later add direct
+             OAuth for self-hosted Connect farms (AFS), use a dedicated
+             scheme like prusaconnectwidget:// so PrusaSlicer stays untouched. -->
+
+        <!-- COM Server registration for the widget provider class. -->
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer
+                Executable="PrusaConnect.Widget.exe"
+                DisplayName="Prusa Connect Widget Provider"
+                Arguments="-RegisterProcessAsComServer">
+              <com:Class
+                  Id="B9DE1AA2-389D-4D14-B146-61B1040C0B59"
+                  DisplayName="Prusa Connect Widget Provider" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+
+        <!-- Widget definitions exposed to the Windows Widgets Board. -->
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension
+              Name="com.microsoft.windows.widgets"
+              Id="PrusaConnectWidgetProvider"
+              PublicFolder="Public"
+              DisplayName="Prusa Connect Widget Provider"
+              Description="Widget provider for Prusa printer monitoring">
+            <uap3:Properties>
+              <WidgetProvider>
+                <ProviderIcons>
+                  <Icon Path="Assets\Square44x44Logo.png" />
+                </ProviderIcons>
+                <Activation>
+                  <CreateInstance ClassId="B9DE1AA2-389D-4D14-B146-61B1040C0B59" />
+                </Activation>
+                                                                <Definitions>
+
+                  <Definition Id="prusa.printer.01" DisplayName="Prusa Connect - 1" Description="A configurable Prusa Connect tile. Choose what it shows (printer status, team status, farm status, or farm orders) in the Prusa Connect Widget settings app." AllowMultiple="true" IsCustomizable="true">
+                    <Capabilities><Capability><Size Name="small" /></Capability><Capability><Size Name="medium" /></Capability><Capability><Size Name="large" /></Capability></Capabilities>
+                    <ThemeResources><Icons><Icon Path="Assets\Square44x44Logo.png" /></Icons><Screenshots><Screenshot Path="Assets\WidgetScreenshot.png" DisplayAltText="Prusa Research" /></Screenshots><DarkMode /><LightMode /></ThemeResources>
+                  </Definition>
+                  <Definition Id="prusa.printer.02" DisplayName="Prusa Connect - 2" Description="A configurable Prusa Connect tile. Choose what it shows (printer status, team status, farm status, or farm orders) in the Prusa Connect Widget settings app." AllowMultiple="true" IsCustomizable="true">
+                    <Capabilities><Capability><Size Name="small" /></Capability><Capability><Size Name="medium" /></Capability><Capability><Size Name="large" /></Capability></Capabilities>
+                    <ThemeResources><Icons><Icon Path="Assets\Square44x44Logo.png" /></Icons><Screenshots><Screenshot Path="Assets\WidgetScreenshot.png" DisplayAltText="Prusa Research" /></Screenshots><DarkMode /><LightMode /></ThemeResources>
+                  </Definition>
+                  <Definition Id="prusa.printer.03" DisplayName="Prusa Connect - 3" Description="A configurable Prusa Connect tile. Choose what it shows (printer status, team status, farm status, or farm orders) in the Prusa Connect Widget settings app." AllowMultiple="true" IsCustomizable="true">
+                    <Capabilities><Capability><Size Name="small" /></Capability><Capability><Size Name="medium" /></Capability><Capability><Size Name="large" /></Capability></Capabilities>
+                    <ThemeResources><Icons><Icon Path="Assets\Square44x44Logo.png" /></Icons><Screenshots><Screenshot Path="Assets\WidgetScreenshot.png" DisplayAltText="Prusa Research" /></Screenshots><DarkMode /><LightMode /></ThemeResources>
+                  </Definition>
+                  <Definition Id="prusa.printer.04" DisplayName="Prusa Connect - 4" Description="A configurable Prusa Connect tile. Choose what it shows (printer status, team status, farm status, or farm orders) in the Prusa Connect Widget settings app." AllowMultiple="true" IsCustomizable="true">
+                    <Capabilities><Capability><Size Name="small" /></Capability><Capability><Size Name="medium" /></Capability><Capability><Size Name="large" /></Capability></Capabilities>
+                    <ThemeResources><Icons><Icon Path="Assets\Square44x44Logo.png" /></Icons><Screenshots><Screenshot Path="Assets\WidgetScreenshot.png" DisplayAltText="Prusa Research" /></Screenshots><DarkMode /><LightMode /></ThemeResources>
+                  </Definition>
+
+                </Definitions>
+              </WidgetProvider>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
+
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
+  </Capabilities>
+
+</Package>

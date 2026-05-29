@@ -1,0 +1,60 @@
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+!packages/build/
+project.lock.json
+project.fragment.lock.json
+
+# MSIX / appx / signing
+artifacts/
+AppPackages/
+BundleArtifacts/
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.appxupload
+*.pfx
+*.snk
+GeneratedArtifacts/
+
+# Resharper / Rider
+_ReSharper*/
+*.DotSettings.user
+
+# Crash dumps and Windows files
+*.pdb
+*.dmp
+*.cache
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# OS metadata
+.DS_Store
+
+# Tooling
+.tools/
+.dotnet/
+
+# Local settings
+appsettings.Local.json
+secrets.json

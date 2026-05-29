@@ -1,0 +1,47 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "PRUSA",
+          "weight": "Bolder",
+          "size": "ExtraLarge",
+          "horizontalAlignment": "Center",
+          "spacing": "None"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Connect Widget",
+          "weight": "Lighter",
+          "size": "Small",
+          "isSubtle": true,
+          "horizontalAlignment": "Center",
+          "spacing": "None"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Phase 0 - provider online",
+          "color": "Accent",
+          "size": "Medium",
+          "horizontalAlignment": "Center",
+          "spacing": "Medium",
+          "wrap": true
+        },
+        {
+          "type": "TextBlock",
+          "text": "Configure printers in the settings app (coming next).",
+          "size": "Small",
+          "isSubtle": true,
+          "horizontalAlignment": "Center",
+          "wrap": true,
+          "spacing": "Small"
+        }
+      ]
+    }
+  ]
+}
