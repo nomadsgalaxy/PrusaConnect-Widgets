@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using PrusaConnect.Core.Models;
+using PrusaConnect.Core.Moonraker;
 using PrusaConnect.Core.PrusaConnect;
 using PrusaConnect.Core.PrusaLink;
 using PrusaConnect.Core.Storage;
@@ -15,6 +16,7 @@ public enum StatusSource
     Unknown,
     PrusaLink,
     PrusaConnect,
+    Moonraker,
 }
 
 public sealed record PrinterStatusResult(PrinterStatus Status, StatusSource Source);
@@ -42,6 +44,14 @@ public sealed class PrinterStatusService
         PrinterInfo printer, StatusSource preferred, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(printer);
+
+        // Klipper printers speak Moonraker, not PrusaLink/Connect - handle directly.
+        if (printer.Source == PrinterSource.Moonraker)
+        {
+            using var mc = new MoonrakerClient(printer.Host, printer.Port, _secrets.Get(printer.Id));
+            var moonStatus = await mc.GetStatusAsync(ct).ConfigureAwait(false);
+            return new PrinterStatusResult(moonStatus, StatusSource.Moonraker);
+        }
 
         Exception? lastError = null;
 

@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using PrusaConnect.Core.Models;
+using PrusaConnect.Core.Moonraker;
 using PrusaConnect.Core.PrusaConnect;
 using PrusaConnect.Core.PrusaLink;
 using PrusaConnect.Core.Storage;
@@ -423,7 +424,7 @@ public sealed partial class SettingsWindow : Window
         var titleText = new TextBlock { Text = title, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold };
         var metaText = new TextBlock
         {
-            Text = isNew ? "Fill in PrusaLink LAN details below." : FormatSavedMeta(existing),
+            Text = isNew ? "Pick the connection type and fill in the LAN details below." : FormatSavedMeta(existing),
             Opacity = 0.6,
             FontSize = 12,
         };
@@ -466,16 +467,22 @@ public sealed partial class SettingsWindow : Window
         var apiKeyBox = new PasswordBox
         {
             Header = "API key",
-            PlaceholderText = "From PrusaLink → Settings → API key",
+            PlaceholderText = "PrusaLink key (Klipper/Moonraker: usually blank)",
             Password = isNew ? string.Empty : (_secrets.Get(existing.Id) ?? string.Empty),
         };
         var modelBox = new TextBox { Header = "Model (optional)", Text = isNew ? string.Empty : existing.Model };
         var cameraBox = new TextBox
         {
-            Header = "Camera stream URL (optional)",
-            PlaceholderText = "rtsp://printer-ip/stream or http://...",
+            Header = "Camera snapshot URL (optional)",
+            PlaceholderText = "http://printer-ip/webcam/snapshot",
             Text = isNew ? string.Empty : (existing.CameraStreamUrl ?? string.Empty),
         };
+
+        var typeCombo = new ComboBox { Header = "Connection", Width = 280 };
+        typeCombo.Items.Add(new ComboBoxItem { Content = "PrusaLink (Prusa firmware)" });
+        typeCombo.Items.Add(new ComboBoxItem { Content = "Klipper (Moonraker)" });
+        typeCombo.SelectedIndex = (!isNew && existing.Source == PrinterSource.Moonraker) ? 1 : 0;
+        bool IsMoonraker() => typeCombo.SelectedIndex == 1;
 
         var testButton = new Button { Content = "Test connection" };
         var saveButton = new Button { Content = isNew ? "Add" : "Save", Style = (Style)Application.Current.Resources["AccentButtonStyle"] };
@@ -486,6 +493,7 @@ public sealed partial class SettingsWindow : Window
         buttonRow.Children.Add(cancelButton);
 
         var body = new StackPanel { Spacing = 14 };
+        body.Children.Add(typeCombo);
         body.Children.Add(nameBox);
         body.Children.Add(hostPortGrid);
         body.Children.Add(apiKeyBox);
@@ -525,22 +533,39 @@ public sealed partial class SettingsWindow : Window
 
         testButton.Click += async (s, e) =>
         {
-            if (string.IsNullOrWhiteSpace(hostBox.Text) || string.IsNullOrEmpty(apiKeyBox.Password))
+            bool moonraker = IsMoonraker();
+            if (string.IsNullOrWhiteSpace(hostBox.Text))
             {
-                ShowStatus(InfoBarSeverity.Warning, "Cannot test", "Host and API key are required.");
+                ShowStatus(InfoBarSeverity.Warning, "Cannot test", "Host is required.");
                 return;
             }
+            if (!moonraker && string.IsNullOrEmpty(apiKeyBox.Password))
+            {
+                ShowStatus(InfoBarSeverity.Warning, "Cannot test", "API key is required for PrusaLink.");
+                return;
+            }
+            string kindName = moonraker ? "Moonraker" : "PrusaLink";
             testButton.IsEnabled = false;
             ShowStatus(InfoBarSeverity.Informational, "Testing…", $"Contacting {hostBox.Text}:{(int)portBox.Value}…");
             try
             {
                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
-                using var client = new PrusaLinkClient(hostBox.Text.Trim(), apiKeyBox.Password, (int)portBox.Value);
-                var result = await client.TestConnectionAsync(cts.Token);
+                TestResult result;
+                if (moonraker)
+                {
+                    using var mc = new MoonrakerClient(hostBox.Text.Trim(), (int)portBox.Value,
+                        string.IsNullOrEmpty(apiKeyBox.Password) ? null : apiKeyBox.Password);
+                    result = await mc.TestConnectionAsync(cts.Token);
+                }
+                else
+                {
+                    using var client = new PrusaLinkClient(hostBox.Text.Trim(), apiKeyBox.Password, (int)portBox.Value);
+                    result = await client.TestConnectionAsync(cts.Token);
+                }
                 switch (result.Kind)
                 {
                     case TestResultKind.Ok:
-                        ShowStatus(InfoBarSeverity.Success, "Connected", $"PrusaLink at {hostBox.Text}:{(int)portBox.Value} responded.");
+                        ShowStatus(InfoBarSeverity.Success, "Connected", $"{kindName} at {hostBox.Text}:{(int)portBox.Value} responded.");
                         break;
                     case TestResultKind.Unauthorized:
                         ShowStatus(InfoBarSeverity.Error, "API key rejected", "PrusaLink returned 401.");
@@ -578,7 +603,8 @@ public sealed partial class SettingsWindow : Window
 
             if (string.IsNullOrWhiteSpace(name)) { ShowStatus(InfoBarSeverity.Warning, "Cannot save", "Display name is required."); return; }
             if (string.IsNullOrWhiteSpace(host)) { ShowStatus(InfoBarSeverity.Warning, "Cannot save", "Host is required."); return; }
-            if (string.IsNullOrWhiteSpace(apiKey)) { ShowStatus(InfoBarSeverity.Warning, "Cannot save", "API key is required."); return; }
+            bool moonraker = IsMoonraker();
+            if (!moonraker && string.IsNullOrWhiteSpace(apiKey)) { ShowStatus(InfoBarSeverity.Warning, "Cannot save", "API key is required for PrusaLink."); return; }
             if (port is < 1 or > 65535) { ShowStatus(InfoBarSeverity.Warning, "Cannot save", "Port must be 1-65535."); return; }
 
             try
@@ -597,10 +623,10 @@ public sealed partial class SettingsWindow : Window
                     ConnectUuid = isNew ? null : existing.ConnectUuid,
                     Hostname = isNew ? null : existing.Hostname,
                     Serial = isNew ? null : existing.Serial,
-                    Source = isNew ? PrinterSource.PrusaLink : existing.Source,
+                    Source = moonraker ? PrinterSource.Moonraker : (isNew ? PrinterSource.PrusaLink : existing.Source),
                 };
                 _printers.Upsert(printer);
-                _secrets.Set(id, apiKey);
+                if (!string.IsNullOrEmpty(apiKey)) _secrets.Set(id, apiKey); else _secrets.Remove(id);
                 RebuildSavedPrintersList();
                 RebuildPinnedTilesList(); // surface the new/edited printer in tile dropdowns
                 ShowStatus(InfoBarSeverity.Success, isNew ? "Added" : "Saved",
@@ -641,7 +667,12 @@ public sealed partial class SettingsWindow : Window
         var parts = new List<string>();
         if (!string.IsNullOrWhiteSpace(p.Model)) parts.Add(p.Model);
         parts.Add($"{p.Host}:{p.Port}");
-        parts.Add(p.Source == PrinterSource.PrusaConnect ? "from Connect import" : "manual");
+        parts.Add(p.Source switch
+        {
+            PrinterSource.PrusaConnect => "from Connect import",
+            PrinterSource.Moonraker => "Klipper (Moonraker)",
+            _ => "manual",
+        });
         if (!string.IsNullOrWhiteSpace(p.CameraStreamUrl)) parts.Add("camera ✓");
         return string.Join("  •  ", parts);
     }

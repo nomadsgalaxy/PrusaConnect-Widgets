@@ -25,6 +25,11 @@ Every tile starts blank until you set it in the settings app. Pick one of:
 - **Farm orders** - the order queue for a Connect Farm team, with per-order
   progress, ETA, and which printers are running each one right now.
 
+Printer status works with **Prusa printers** (PrusaLink on the LAN, or imported
+from Prusa Connect) and **Klipper printers via Moonraker** - including the Prusa
+HT90. Point it at the printer's host, pick the connection type, and optionally
+give it a `/webcam/snapshot` URL for the camera.
+
 Tiles come in small, medium, and large; each kind fills the space it's given.
 
 ## Heads up

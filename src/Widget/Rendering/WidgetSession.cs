@@ -386,7 +386,7 @@ internal sealed class WidgetSession : IDisposable
             && (manual!.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
                 || manual.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
         {
-            return (manual, null);
+            return (CameraImage.ToSnapshotUrl(manual!), null);
         }
 
         // serve the cached snapshot if fresh. once it's stale (camera not

@@ -42,4 +42,5 @@ public enum PrinterSource
 {
     PrusaLink,
     PrusaConnect,
+    Moonraker,
 }

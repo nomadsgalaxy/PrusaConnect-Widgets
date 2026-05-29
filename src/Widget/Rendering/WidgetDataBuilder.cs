@@ -91,7 +91,7 @@ internal static class WidgetDataBuilder
             ["stateLabel"] = status is null ? string.Empty : FormatState(status.State),
             ["stateColor"] = status is null ? "Default" : StateAdaptiveColor(status.State),
             ["hasImage"] = hasHttpImage,
-            ["cameraUrl"] = hasHttpImage ? url : string.Empty,
+            ["cameraUrl"] = hasHttpImage ? CameraImage.ToSnapshotUrl(url!) : string.Empty,
             ["note"] = note,
             ["hasNote"] = !string.IsNullOrEmpty(note),
             ["accentBar"] = BrandImages.OrangeBar,

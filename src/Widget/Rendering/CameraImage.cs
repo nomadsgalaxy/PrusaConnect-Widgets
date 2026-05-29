@@ -17,6 +17,24 @@ internal static class CameraImage
     private const int MaxWidth = 640;
     private const long JpegQuality = 72;
 
+    /// <summary>
+    /// Normalize a webcam URL to a single still. A tile can't render an MJPEG
+    /// stream, so swap the common stream endpoints to their snapshot form:
+    /// mjpg-streamer's <c>?action=stream</c> -> <c>?action=snapshot</c>, and a
+    /// crowsnest/ustreamer trailing <c>/stream</c> -> <c>/snapshot</c>. Anything
+    /// else (including an already-correct snapshot URL) passes through unchanged.
+    /// </summary>
+    public static string ToSnapshotUrl(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return url;
+        string s = url.Replace("action=stream", "action=snapshot", StringComparison.OrdinalIgnoreCase);
+        if (s.EndsWith("/stream", StringComparison.OrdinalIgnoreCase))
+        {
+            s = s.Substring(0, s.Length - "/stream".Length) + "/snapshot";
+        }
+        return s;
+    }
+
     public static string ToDownscaledDataUri(byte[] jpeg)
     {
         using var inStream = new MemoryStream(jpeg);

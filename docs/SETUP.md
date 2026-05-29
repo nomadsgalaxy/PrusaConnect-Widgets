@@ -50,6 +50,13 @@ shortcut opens the settings app.
    into the app's local store, so a Printer status tile can fall back to the
    printer directly on your network.
 
+You can also add printers by hand, including **Klipper printers via Moonraker**
+(such as the Prusa HT90). Click **Add new**, set **Connection** to
+*Klipper (Moonraker)*, enter the printer's host (port is usually 80 for a
+Mainsail/Fluidd box, or 7125 for Moonraker direct), and leave **API key** blank
+unless your Moonraker is locked down. For the camera, paste the snapshot URL,
+e.g. `http://<printer>/webcam/snapshot`. **Test connection** checks it, then **Add**.
+
 ## 4. Pin your tiles
 
 1. Press `Win+W` to open the Widgets Board.
