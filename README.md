@@ -9,6 +9,8 @@ so I figured I'd find out what it'd take to shove Prusa Connect into it. It
 reuses the Prusa Connect login PrusaSlicer already stores, so there's no separate
 account to set up - if you're signed into Connect in PrusaSlicer, it just works.
 
+<img src="docs/board.png" alt="Four Prusa Connect Widget tiles on the Windows 11 Widgets Board: two printers with live camera and temps, a fleet Farm Status summary, and Farm Orders with per-order progress" width="480">
+
 Setup walkthrough: [docs/SETUP.md](docs/SETUP.md).
 
 ## What a tile can show
