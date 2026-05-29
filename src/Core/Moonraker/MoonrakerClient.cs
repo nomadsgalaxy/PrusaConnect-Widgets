@@ -17,8 +17,19 @@ namespace PrusaConnect.Core.Moonraker;
 /// </summary>
 public sealed class MoonrakerClient : IDisposable
 {
+    // Chamber objects vary by config; Moonraker returns {} for ones a printer
+    // doesn't have, so we ask for all the common names and use whichever answers.
     private const string Query =
-        "printer/objects/query?print_stats&heater_bed&extruder&display_status&virtual_sdcard";
+        "printer/objects/query?print_stats&heater_bed&extruder&display_status&virtual_sdcard"
+        + "&heater_chamber"
+        + "&temperature_sensor%20chamber"
+        + "&heater_generic%20chamber"
+        + "&temperature_fan%20chamber";
+
+    private static readonly string[] ChamberKeys =
+    {
+        "heater_chamber", "temperature_sensor chamber", "heater_generic chamber", "temperature_fan chamber",
+    };
 
     private readonly HttpClient _http;
     private readonly bool _ownsHttpClient;
@@ -55,12 +66,22 @@ public sealed class MoonrakerClient : IDisposable
         }
 
         string stateWire = GetStr(status, "print_stats", "state") ?? string.Empty;
+
+        double? chamberCur = null, chamberTgt = null;
+        foreach (var key in ChamberKeys)
+        {
+            var t = GetNum(status, key, "temperature");
+            if (t is not null) { chamberCur = t; chamberTgt = GetNum(status, key, "target"); break; }
+        }
+
         var temps = new Temperatures
         {
             NozzleCurrent = GetNum(status, "extruder", "temperature"),
             NozzleTarget = GetNum(status, "extruder", "target"),
             BedCurrent = GetNum(status, "heater_bed", "temperature"),
             BedTarget = GetNum(status, "heater_bed", "target"),
+            ChamberCurrent = chamberCur,
+            ChamberTarget = chamberTgt,
         };
 
         JobInfo? job = null;

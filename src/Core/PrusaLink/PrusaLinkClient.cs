@@ -58,6 +58,8 @@ public sealed class PrusaLinkClient : IDisposable
             NozzleTarget = status.Printer.TargetNozzle,
             BedCurrent = status.Printer.TempBed,
             BedTarget = status.Printer.TargetBed,
+            ChamberCurrent = status.Printer.TempChamber,
+            ChamberTarget = status.Printer.TargetChamber,
         };
 
         JobInfo? job = null;

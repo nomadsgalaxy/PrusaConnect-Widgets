@@ -37,6 +37,8 @@ internal static class WidgetDataBuilder
             ["idleLabel"] = FormatIdleLabel(status.State),
             ["nozzleTemp"] = FormatTempPair(status.Temperatures.NozzleCurrent, status.Temperatures.NozzleTarget),
             ["bedTemp"] = FormatTempPair(status.Temperatures.BedCurrent, status.Temperatures.BedTarget),
+            ["chamberTemp"] = FormatTempPair(status.Temperatures.ChamberCurrent, status.Temperatures.ChamberTarget),
+            ["hasChamber"] = status.Temperatures.ChamberCurrent is not null,
             ["updatedLabel"] = FormatRelativeTime(status.Timestamp),
             ["accentBar"] = BrandImages.OrangeBar,
             // Large-tile camera image (data URI or http URL) + staleness label,

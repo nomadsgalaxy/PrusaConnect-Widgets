@@ -17,8 +17,8 @@ Setup walkthrough: [docs/SETUP.md](docs/SETUP.md).
 
 Every tile starts blank until you set it in the settings app. Pick one of:
 
-- **Printer status** - a single printer: state, nozzle/bed temps, current file,
-  time left.
+- **Printer status** - a single printer: state, nozzle/bed/chamber temps,
+  current file, time left.
 - **Team status** - printing / idle / attention / offline counts for a regular
   Prusa Connect team. No Connect Farm needed.
 - **Farm status** - the same fleet summary for a Connect Farm organization.

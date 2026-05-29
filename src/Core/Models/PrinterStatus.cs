@@ -23,6 +23,11 @@ public sealed record Temperatures
     public double? NozzleTarget { get; init; }
     public double? BedCurrent { get; init; }
     public double? BedTarget { get; init; }
+
+    // Enclosed/high-temp printers only (e.g. the HT90). Null when there's no
+    // chamber sensor; target is null for a passive sensor (no heater).
+    public double? ChamberCurrent { get; init; }
+    public double? ChamberTarget { get; init; }
 }
 
 public sealed record JobInfo

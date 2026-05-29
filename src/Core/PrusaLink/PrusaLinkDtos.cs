@@ -36,6 +36,12 @@ internal sealed class StatusPrinterDto
     [JsonPropertyName("target_bed")]
     public double? TargetBed { get; set; }
 
+    [JsonPropertyName("temp_chamber")]
+    public double? TempChamber { get; set; }
+
+    [JsonPropertyName("target_chamber")]
+    public double? TargetChamber { get; set; }
+
     [JsonPropertyName("axis_z")]
     public double? AxisZ { get; set; }
 

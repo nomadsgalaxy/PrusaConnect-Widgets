@@ -154,6 +154,27 @@
           ]
         },
         {
+          "$when": "${hasChamber}",
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "Chamber",
+              "size": "Small",
+              "isSubtle": true,
+              "spacing": "None"
+            },
+            {
+              "type": "TextBlock",
+              "text": "${chamberTemp}",
+              "weight": "Bolder",
+              "size": "Default",
+              "spacing": "None"
+            }
+          ]
+        },
+        {
           "type": "Column",
           "width": "auto",
           "verticalContentAlignment": "Bottom",

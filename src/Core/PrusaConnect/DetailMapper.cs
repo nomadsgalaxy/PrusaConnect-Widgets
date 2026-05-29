@@ -21,6 +21,8 @@ internal static class DetailMapper
                 NozzleTarget = d.Temp?.TargetNozzle,
                 BedCurrent = d.Temp?.TempBed,
                 BedTarget = d.Temp?.TargetBed,
+                ChamberCurrent = d.Temp?.TempChamber,
+                ChamberTarget = d.Temp?.TargetChamber,
             },
             Job = BuildJob(d),
             Timestamp = DateTimeOffset.UtcNow,

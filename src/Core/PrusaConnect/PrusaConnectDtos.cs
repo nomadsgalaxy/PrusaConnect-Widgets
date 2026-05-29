@@ -165,6 +165,8 @@ public sealed class ConnectTempDto
     [JsonPropertyName("target_nozzle")] public double? TargetNozzle { get; set; }
     [JsonPropertyName("temp_bed")] public double? TempBed { get; set; }
     [JsonPropertyName("target_bed")] public double? TargetBed { get; set; }
+    [JsonPropertyName("temp_chamber")] public double? TempChamber { get; set; }
+    [JsonPropertyName("target_chamber")] public double? TargetChamber { get; set; }
 }
 
 public sealed class ConnectNetworkInfoDto
